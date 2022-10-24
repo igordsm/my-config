@@ -1,6 +1,6 @@
 local M = {}
 
-local all_projects = {}
+M.all_projects = {}
 local tasks_by_tag = {}
 local tasklist = {}
 
@@ -48,6 +48,7 @@ function parse_file(filename)
 
     local current_project = "(empty)"
 
+    local linenum = 1
     for l in f:lines() do
         local _, _, proj_name = l:find("### (.*)")
         local _, _, checkmark, text = l:find( "%[([xX ])%](.*)")
@@ -62,13 +63,14 @@ function parse_file(filename)
                 descr = descr;
                 date = date;
                 origin = filename;
+                linenum = linenum;
                 taglist = taglist;
             }
 
             table.insert(tasklist, new_task)
-            all_projects[current_project] = true
+            M.all_projects[current_project] = true
         end
-
+        linenum = linenum + 1
     end
 end
 
@@ -100,7 +102,7 @@ function M.get_tasks_from_project(projname)
 
     for _, v in pairs(tasklist) do
         if v.taglist[projname] then
-            table.insert(tasks, task_to_string(v))
+            tasks[task_to_string(v)] = v
         end
     end
 
@@ -111,11 +113,12 @@ end
 
 local Menu = require("nui.menu")
 
-function M.ui_choose_project(callback)
+function M.ui_choose(options, callback)
     local itens = {}
 
-    for k, _ in pairs(all_projects) do
-        table.insert(itens, Menu.item(k))
+    for k, v in pairs(options) do
+        print(v)
+        table.insert(itens, Menu.item(k, {key = k, value = v}))
     end
 
     local menu = Menu({
@@ -152,7 +155,6 @@ function M.ui_choose_project(callback)
 
     -- mount the component
     menu:mount()    
-
 end
 
 return M
