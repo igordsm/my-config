@@ -9,10 +9,6 @@ require "paq" {
     "MunifTanjim/nui.nvim";
 }
 
-local Popup = require("nui.popup")
-local tags = require "igortags"
-local Tasks = require "igortasks"
-
 --- Tab configurations
 local set = vim.opt
 set.tabstop = 4
@@ -23,35 +19,26 @@ set.smartindent = true
 set.guicursor = "i:block"
 set.cursorline = true
 
-function show_popup(text)
-    local p = Popup {
-        enter = true,
-        focusable = true,
-        border = {
-        style = "rounded",
-        },
-        position = "50%",
-        size = {
-        width = "80%",
-        height = "60%",
-        },
-    }
-    p:mount()
-    vim.api.nvim_buf_set_lines(p.bufnr, 0, 1, false, text)
-end
+--- LSP configurations
+require "lsp"
+
+
+--- Organization Features
 
 local Org = require "igororg"
 Org.parse_all_tasks()
 
 function print_tasks() 
-    --local l = Org.get_all_tasks()
-    --local l = Org.get_tasks_from_project("Técnicas de Programação")
-    --show_popup(l)
-
-    Org.ui_choose_project(function (item) 
+    Org.ui_choose(Org.all_projects, function (item) 
         print(item.text .. " chosen")
         local l = Org.get_tasks_from_project(item.text)
-        show_popup(l)
+
+        Org.ui_choose(l, function (item)
+            vim.api.nvim_exec("tabnew " .. item.value.origin, false)
+            vim.api.nvim_exec("" .. item.value.linenum, false)
+            print(item.value.descr .. " " .. item.value.origin)
+        end)
+
     end)
 end
 
