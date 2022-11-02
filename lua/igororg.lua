@@ -40,6 +40,9 @@ function parse_task_text(text, project)
         taglist[data] = true
     until true
 
+    text = text:gsub(tag_pattern, "")
+    text = text:gsub("%s+", " ")
+
     return text, date, taglist, project
 end
 
@@ -82,27 +85,44 @@ function M.parse_all_tasks()
     end
 end
 
-function task_to_string(tsk)
-    return "" .. tsk.descr .. " due " .. tsk.date .. " in " .. tsk.origin
+function M.task_to_string(tsk)
+    return tsk.descr .. " due " .. tsk.date .. " in " .. tsk.origin
 end
 
 function M.get_all_tasks()
     local tasks = {}
 
     for _, v in pairs(tasklist) do
-        table.insert(tasks, task_to_string(v))
+        table.insert(tasks, M.task_to_string(v))
     end
 
     return tasks
 end
 
-function M.get_tasks_from_project(projname)
+function M.get_tasks_by(filterfunc)
     local tasks = {}
-    projname = slugify(projname)
 
     for _, v in pairs(tasklist) do
-        if v.taglist[projname] then
-            tasks[task_to_string(v)] = v
+        if filterfunc(v) then
+            tasks[M.task_to_string(v)] = v
+        end
+    end
+
+    return tasks
+end
+
+
+function M.get_tasks_from_project(projname, filterfunc)
+    local tasks = {}
+    projname = slugify(projname)
+    
+    if filterfunc == nil then
+        filterfunc = function(v) return true end
+    end
+
+    for _, v in pairs(tasklist) do
+        if v.taglist[projname] and filterfunc(v) then
+            tasks[M.task_to_string(v)] = v
         end
     end
 
@@ -124,7 +144,7 @@ function M.ui_choose(options, callback)
     local menu = Menu({
         position = "50%",
         size = {
-            width = 55,
+            width = 75,
             height = 15,
         },
         border = {
@@ -139,7 +159,7 @@ function M.ui_choose(options, callback)
         },
     }, {
         lines = itens,
-        max_width = 40,
+        max_width = 75,
         keymap = {
             focus_next = { "j", "<Down>", "<Tab>" },
             focus_prev = { "k", "<Up>", "<S-Tab>" },
