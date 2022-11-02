@@ -77,6 +77,17 @@ function parse_file(filename)
     end
 end
 
+function M.update_file(filename)
+    for i=#tasklist,1,-1 do
+        if tasklist[i].origin == filename then
+            table.remove(tasklist, i)
+        end
+    end
+
+    parse_file(filename)
+end
+
+
 function M.parse_all_tasks()
     local files = M.files()
 
