@@ -46,12 +46,23 @@ if conffile ~= nil then
         vim.api.nvim_exec("" .. task.linenum, false)
     end
 
-    function print_tasks() 
-        Org.ui_choose(Org.all_projects, function (item) 
+    function print_tasks()
+        local sorted_projects = {}
+        for k, _ in pairs(Org.all_projects) do
+            table.insert(sorted_projects, k)
+        end
+        table.sort(sorted_projects)
+
+        Org.ui_choose(sorted_projects, function (item) 
             print(item.text .. " chosen")
             local l = Org.get_tasks_from_project(item.text, function (tsk)
                 return not tsk.done
             end)
+
+            local task_options = {}
+            for k, _ in pairs(l) do
+                table.insert(task_options, k.to_string)
+            end
 
             Org.ui_choose(l, function (item) open_file_from_task(item.value) end)
 

@@ -69,6 +69,7 @@ function parse_file(filename)
                 linenum = linenum;
                 taglist = taglist;
             }
+            new_task.to_string = M.task_to_string(new_task)
 
             table.insert(tasklist, new_task)
             M.all_projects[current_project] = true
@@ -147,9 +148,14 @@ local Menu = require("nui.menu")
 function M.ui_choose(options, callback)
     local itens = {}
 
-    for k, v in pairs(options) do
-        print(v)
-        table.insert(itens, Menu.item(k, {key = k, value = v}))
+    if options[1] ~= nil then
+        for k, v in pairs(options) do
+            table.insert(itens, Menu.item(v, {key = k, value = v}))
+        end
+    else
+        for k, v in pairs(options) do
+            table.insert(itens, Menu.item(k, {key = k, value = v}))
+        end
     end
 
     local menu = Menu({
