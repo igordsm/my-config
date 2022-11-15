@@ -46,7 +46,7 @@ if conffile ~= nil then
         vim.api.nvim_exec("" .. task.linenum, false)
     end
 
-    function print_tasks()
+    function show_tasks_by_project()
         local sorted_projects = {}
         for k, _ in pairs(Org.all_projects) do
             table.insert(sorted_projects, k)
@@ -59,16 +59,20 @@ if conffile ~= nil then
                 return not tsk.done
             end)
 
-            local task_options = {}
-            for k, _ in pairs(l) do
-                table.insert(task_options, k.to_string)
+            local sz = 0
+            for _, _ in pairs(l) do
+                sz = sz + 1
             end
 
-            Org.ui_choose(l, function (item) open_file_from_task(item.value) end)
+            if sz ~= 0 then
+                Org.ui_choose(l, function (item) open_file_from_task(item.value) end)
+            else
+                print("Empty project") 
+            end
 
         end)
     end
-    vim.keymap.set("n", "tt", print_tasks)
+    vim.keymap.set("n", "tt", show_tasks_by_project)
 
 
     function show_follow_ups()
