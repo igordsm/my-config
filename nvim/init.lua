@@ -405,12 +405,12 @@ local servers = {
   -- rust_analyzer = {},
   -- tsserver = {},
 
-  lua_ls = {
-    Lua = {
-      workspace = { checkThirdParty = false },
-      telemetry = { enable = false },
-    },
-  },
+  --lua_ls = {
+  --  Lua = {
+  --    workspace = { checkThirdParty = false },
+  --   telemetry = { enable = false },
+  --  },
+  -- },
 }
 
 -- Setup neovim lua configuration
@@ -487,4 +487,7 @@ cmp.setup {
 
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
+
+--- Configure custom keymaps
+vim.keymap.set('t', '<Esc>', '<C-\\><C-n>', {})
 
