@@ -178,7 +178,26 @@ require('lazy').setup({
   --       Uncomment any of the lines below to enable them.
   -- require 'kickstart.plugins.autoformat',
   -- require 'kickstart.plugins.debug',
-
+  --
+  {
+    'kyazdani42/nvim-tree.lua',
+    dependencies = {
+         "kyazdani42/nvim-web-devicons"
+    },
+    config = function()
+        require("nvim-tree").setup {
+          disable_netrw = true,
+          hijack_netrw = true,
+          view = {
+            number = true,
+            relativenumber = true,
+          },
+          filters = {
+            custom = { ".git" },
+          },
+        }
+    end,
+  },
 }, {})
 
 -- [[ Setting options ]]
@@ -490,4 +509,4 @@ cmp.setup {
 
 --- Configure custom keymaps
 vim.keymap.set('t', '<Esc>', '<C-\\><C-n>', {})
-
+vim.keymap.set('n', '<leader>f', ':NvimTreeToggle<CR>', {})
