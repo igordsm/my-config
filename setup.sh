@@ -1,1 +1,3 @@
-ln -s  $PWD/nvim $HOME/.config/nvim
+ln -s $PWD/nvim $HOME/.config/
+
+ln -s $PWD/helix $HOME/.config/
