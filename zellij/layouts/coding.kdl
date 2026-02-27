@@ -1,0 +1,33 @@
+layout {
+    tab name="opencode"{
+        pane size=1 borderless=true {
+            plugin location="tab-bar"
+        }
+        pane command="opencode" borderless=true
+        pane size=1 borderless=true {
+            plugin location="status-bar"
+        }
+    }
+    
+    tab name="editor" hide_floating_panes=true {
+        pane size=1 borderless=true {
+            plugin location="tab-bar"
+        }
+        pane borderless=true {
+            command "helix"
+        }
+        floating_panes {
+            pane command="zsh" {
+                x "10%"
+                y "10%"
+                width "80%"
+                height "80%"
+                
+            }
+        }
+        pane size=1 borderless=true {
+            plugin location="status-bar"
+        }
+    }
+
+}
