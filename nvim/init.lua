@@ -6,6 +6,7 @@ vim.pack.add({
   'https://github.com/github/copilot.vim',
   'https://github.com/ibhagwan/fzf-lua',
   'https://github.com/neovim/nvim-lspconfig',
+  { src='https://github.com/saghen/blink.cmp', version="v1.10.2"},
 })
 
 require('onedark').load()
@@ -39,7 +40,7 @@ vim.keymap.set("n", "<leader>p", "<cmd>FzfLua global<CR>")
 
 
 --- LSP stuff
-vim.lsp.enable("clangd")
+vim.lsp.enable({"clangd", "gopls"})
 
 -- Enable LSP-based completion with autotrigger
 
