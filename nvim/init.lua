@@ -7,6 +7,8 @@ vim.pack.add({
   'https://github.com/ibhagwan/fzf-lua',
   'https://github.com/neovim/nvim-lspconfig',
   { src='https://github.com/saghen/blink.cmp', version="v1.10.2"},
+  "https://github.com/nvim-tree/nvim-web-devicons",
+  'https://github.com/nvim-tree/nvim-tree.lua'
 })
 
 require('onedark').load()
@@ -20,6 +22,9 @@ if os.getenv("TERMUX") ~= nil then
 end
 
 require('fzf-lua').setup { 'default' }
+require('nvim-tree').setup {}
+
+
 
 vim.opt.autoread = true
 vim.api.nvim_create_autocmd({ "BufEnter", "FocusGained" }, {
@@ -36,14 +41,14 @@ vim.keymap.set("n", "<Down>", "gj")
 vim.keymap.set("n", "<leader>f", "<cmd>FzfLua files<CR>")
 vim.keymap.set("n", "<leader>b", "<cmd>FzfLua buffers<CR>")
 vim.keymap.set("n", "<leader>p", "<cmd>FzfLua global<CR>")
+vim.keymap.set("n", "<leader>F", function() require('fzf-lua').files({cwd_only=true}) end, { desc="Find in current folder" })
 
-
+require('nvim-tree.api').tree.toggle()
 
 --- LSP stuff
 vim.lsp.enable({"clangd", "gopls"})
 
 -- Enable LSP-based completion with autotrigger
-
 vim.api.nvim_create_autocmd("LspAttach", {
   callback = function(ev) 
       local client = assert(vim.lsp.get_client_by_id(ev.data.client_id))
