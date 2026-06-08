@@ -6,7 +6,6 @@ vim.g.mapleader = ','
 vim.pack.add({
   'https://github.com/navarasu/onedark.nvim',
   'https://github.com/folke/which-key.nvim',
-  'https://github.com/github/copilot.vim',
   'https://github.com/ibhagwan/fzf-lua',
   'https://github.com/folke/zen-mode.nvim',
 
@@ -17,6 +16,10 @@ vim.pack.add({
   "https://github.com/nvim-tree/nvim-web-devicons",
   'https://github.com/nvim-tree/nvim-tree.lua',
   'https://github.com/nvim-treesitter/nvim-treesitter',
+
+
+  'https://github.com/ray-x/go.nvim',
+  'https://github.com/hedyhli/outline.nvim',
 
 })
 
@@ -46,6 +49,8 @@ require('nvim-tree').setup {
 }
 }
 
+require('outline').setup{}
+
 require('blink.cmp').setup({
   keymap = { preset = 'super-tab' },
 
@@ -67,11 +72,14 @@ require('blink.cmp').setup({
 })
 
 
+require('go').setup{}
 
-vim.opt.autoread = true
+
+opt.autoread = true
 vim.api.nvim_create_autocmd({ "BufEnter", "FocusGained" }, {
   command = "checktime",
 })
+opt.number = true
 
 opt.foldlevel = 2
 opt.foldmethod = "expr"
@@ -87,8 +95,13 @@ vim.keymap.set("n", "<Down>", "gj")
 vim.keymap.set("n", "<leader>f", function() require('fzf-lua').files({cwd_only=true, previewer=false}) end, { desc="Find files" })
 vim.keymap.set("n", "<leader>b", "<cmd>FzfLua buffers<CR>")
 vim.keymap.set("n", "<leader>p", "<cmd>FzfLua global<CR>")
+
+
 vim.keymap.set("n", "<leader>t", require('nvim-tree.api').tree.toggle, { desc = "Toggle file tree"})
+vim.keymap.set("n", "<leader>tf", "<cmd>NvimTreeFindFile<CR>", { desc = "Find file tree"})
 vim.keymap.set("n", "<leader>z", "<cmd>ZenMode<CR>", { desc = "Toggle Zen Mode" })
+
+vim.keymap.set("n", "<leader>o", "<cmd>Outline<CR>")
 
 --- LSP stuff
 vim.lsp.enable({"clangd", "gopls"})
@@ -103,3 +116,38 @@ vim.api.nvim_create_autocmd("LspAttach", {
     end
     })
 
+-- Enable session saving
+vim.api.nvim_create_autocmd("VimLeavePre", {
+	callback= function (ev) 
+		vim.cmd("mksession!")
+	end
+})
+
+-- UBER specific stuff --
+--
+
+vim.env.PATH = vim.env.VIM_PATH or vim.env.PATH
+
+vim.lsp.config('ulsp', {
+    cmd = { "socat", "-", "tcp:localhost:27883,ignoreeof" },
+    flags = {
+      debounce_text_changes = 1000,
+    },
+    capabilities = vim.lsp.protocol.make_client_capabilities(),
+    filetypes = { "go", "java" },
+    root_dir = require('lspconfig.util').root_pattern("go.mod", ".git"),
+    single_file_support = false,
+    docs = {
+      description = [[
+  uLSP brought to you by the IDE team!
+  By utilizing uLSP in Neovim, you acknowledge that this integration is provided 'as-is' with no warranty, express or implied.
+  We make no guarantees regarding its functionality, performance, or suitability for any purpose, and absolutely no support will be provided.
+  Use at your own risk, and may the code gods have mercy on your soul
+]],
+    },
+  })
+
+
+
+
+vim.lsp.enable({"clangd", "gopls", 'ulsp'})
