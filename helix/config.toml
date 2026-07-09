@@ -9,3 +9,9 @@ insert = "bar"
 normal = "block"
 select = "underline"
 
+[editor.lsp]
+display-messages = true
+display-inlay-hints = false  # Inlay hints are expensive with gopls
+
+[keys.normal]
+C-g = [":new", ":insert-output lazygit", ":buffer-close!", ":redraw"]
