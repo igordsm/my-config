@@ -3,7 +3,6 @@ theme = "gruvbox_material_dark_hard"
 [editor.soft-wrap]
 enable = true
 
-
 [editor.cursor-shape]
 insert = "bar"
 normal = "block"
@@ -14,4 +13,4 @@ display-messages = true
 display-inlay-hints = false  # Inlay hints are expensive with gopls
 
 [keys.normal]
-C-g = [":new", ":insert-output lazygit", ":buffer-close!", ":redraw"]
+C-g = [":new", ":insert-output lazygit", ":buffer-close!", ":redraw", ":set mouse false", ":set mouse true"]
